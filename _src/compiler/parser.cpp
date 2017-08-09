@@ -1725,7 +1725,7 @@ void Parser::importSource( string file ){
 			objectImports.push_back( t );
 			emit( new ImportStm( sym(mungObjectEntry(file),CG_IMPORT) ),false );
 		}
-	}else  if( ext=="o" || ext=="a" || ext=="lib" ){
+	}else  if( ext=="o" || ext=="a" || ext=="lib" || ext=="dll" || ext=="so" ){
 
 		if( !import_module ){
 
