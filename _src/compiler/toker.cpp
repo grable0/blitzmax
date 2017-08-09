@@ -18,6 +18,7 @@ static void initTokes(){
 
 	_tokes["Strict"]=T_STRICT;
 	_tokes["SuperStrict"]=T_SUPERSTRICT;
+	_tokes["HackerStrict"]=T_HACKERSTRICT;
 	_tokes["Module"]=T_MODULE;
 	_tokes["Framework"]=T_FRAMEWORK;
 	_tokes["Import"]=T_IMPORT;

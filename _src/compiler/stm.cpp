@@ -38,7 +38,7 @@ void LabelStm::eval( Block *b ){
 
 //******************** Goto ***********************
 void GotoStm::eval( Block *b ){
-	if( strictMode ) fail( "Goto cannot be used in strict mode" );
+	if( strictMode && strictMode != 3) fail( "Goto cannot be used in strict mode" );
 	FunBlock *f=b->fun_block;
 	map<string,LabelStm*>::iterator it=f->labels.find( tolower(ident) );
 	if( it==f->labels.end() ) fail( "Label '%s' not found",ident.c_str() );

@@ -11,7 +11,7 @@ struct FunBlock;
 struct ClassBlock;
 struct ModuleType;
 
-extern int strictMode;					//strict option : 1=strict, 2=superstrict!
+extern int strictMode;					//strict option : 1=strict, 2=superstrict!, 3=hackerstrict
 extern FunBlock* mainFun;				//main function
 
 extern DeclSeq rootScope;				//root scope - moduletype decls

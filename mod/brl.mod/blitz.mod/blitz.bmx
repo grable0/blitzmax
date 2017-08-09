@@ -394,6 +394,12 @@ keyword: "SuperStrict"
 End Rem
 
 Rem
+bbdoc: SuperStrict + Goto
+about: Same as SuperStrict but still allowing labels and Goto
+keyword: HackerStrict
+End Rem
+
+Rem
 bbdoc: End program execution
 keyword: "End"
 End Rem

@@ -1416,7 +1416,7 @@ void Parser::parseAccess(){
 void Parser::parseLabelStm(){
 	next();
 	string id=parseIdent();
-	if( strictMode ){
+	if( strictMode && strictMode != 3){
 		while( cparse('\n') ){}
 		switch( curr() ){
 		case T_FOR:case T_WHILE:case T_REPEAT:case T_DEFDATA:
@@ -1811,11 +1811,14 @@ void Parser::parse(){
 		source_info=toker->sourceInfo();
 		if( cparse('\n') ){
 		}else if( cparse( T_STRICT ) ){
-			if( strictMode ) fail( "Strict or SuperStrict already specified" );
+			if( strictMode ) fail( "Strict, SuperStrict or HackerStrict already specified" );
 			strictMode=1;
 		}else if( cparse( T_SUPERSTRICT ) ){
-			if( strictMode ) fail( "Strict or SuperStrict already specified" );
+			if( strictMode ) fail( "Strict, SuperStrict or HackerStrict already specified" );
 			strictMode=2;
+		}else if( cparse( T_HACKERSTRICT ) ){
+			if( strictMode ) fail( "Strict, SuperStrict or HackerStrict already specified" );
+			strictMode=3;
 		}else if( cparse( T_NODEBUG ) ){
 			opt_debug=false;
 			opt_release=true;
