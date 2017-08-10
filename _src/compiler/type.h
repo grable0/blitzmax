@@ -41,6 +41,7 @@ struct VarType;
 struct RefType;
 struct NullType;
 struct ModuleType;
+struct TypeAliasType;
 
 struct Type : public Scope{
 	virtual ~Type();
@@ -63,6 +64,8 @@ struct Type : public Scope{
 	virtual NullType*	nullType();
 	virtual ModuleType* moduleType();
 	
+	virtual TypeAliasType* typeAliasType();
+
 	virtual string		encoding();
 	virtual string		toString();
 	virtual bool		equals( Type *ty );
@@ -74,7 +77,10 @@ struct Type : public Scope{
 
 	static void			createTypes();
 	static void			resolveTypes();
-
+	
+	static TypeAliasType* insertTypeAlias( string id, Type* ty );
+	static TypeAliasType* findTypeAlias( string id );
+	
 	static IntType		*int8,*int16,*int32,*int64;
 	static FloatType	*float32,*float64;
 	static CStringType  *c_string;
@@ -273,7 +279,8 @@ struct AliasType : public Type{
 	FunType*	funType();
 	PtrType*	ptrType();
 	ModuleType* moduleType();
-
+	TypeAliasType* typeAliasType();
+	
 	string		encoding();
 	string		toString();
 	bool		equals( Type *ty );
@@ -290,6 +297,14 @@ struct RefType : public AliasType{
 	RefType( Type *ty,int at=0 ):AliasType(ty),attrs(at){}
 
 	RefType*	refType();
+};
+
+struct TypeAliasType : public AliasType{
+	string ident;
+	
+	TypeAliasType( string id, Type *ty ):AliasType(ty),ident(id){};
+	
+	TypeAliasType* typeAliasType();
 };
 
 struct NullType : public Type{

@@ -485,6 +485,12 @@ keyword: "Ptr"
 End Rem
 
 Rem
+bbdoc: Create type aliases
+about: Currently, Aliases are local to the file. They have their own namespace, but overrides only @{:Type} identifiers
+keyword: Alias
+End Rem
+
+Rem
 bbdoc: Begin a conditional block.
 keyword: "If"
 End Rem

@@ -94,6 +94,8 @@ class Parser{
 	void	parseConstDecls();
 	void	parseFieldDecls();
 
+	void parseAliasDecls();
+
 	void	parseTypeDecl();
 	void	parseFunDecl( int attr );
 

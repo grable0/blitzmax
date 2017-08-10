@@ -7,6 +7,7 @@ using namespace CG;
 static vector<ClassType*> _classTypes;
 static vector<ObjectType*> _objectTypes;
 static vector<PtrType*> _ptrTypes;
+static map<string,TypeAliasType*> _typeAliases;
 
 IntType *Type::int8;
 IntType *Type::int16;
@@ -58,6 +59,18 @@ void Type::resolveTypes(){
 	for( k=0;k<_ptrTypes.size();++k ) _ptrTypes[k]->resolve();
 }
 
+TypeAliasType* Type::insertTypeAlias( string id, Type* ty ){
+	map<string,TypeAliasType*>::iterator it=_typeAliases.find( id );
+	if( it!=_typeAliases.end() ) return 0;
+	return _typeAliases[id] = new TypeAliasType( id, ty );
+}
+
+TypeAliasType* Type::findTypeAlias( string id ){
+	map<string,TypeAliasType*>::iterator it=_typeAliases.find( id );
+	if( it==_typeAliases.end() ) return 0;
+	return it->second;
+}
+
 //********************* Type **********************
 Type::~Type(){
 }
@@ -107,6 +120,9 @@ NullType *Type::nullType(){
 	return 0;
 }
 ModuleType *Type::moduleType(){
+	return 0;
+}
+TypeAliasType* Type::typeAliasType(){
 	return 0;
 }
 string Type::encoding(){
@@ -637,6 +653,10 @@ ModuleType *AliasType::moduleType(){
 	return val_type->moduleType();
 }
 
+TypeAliasType *AliasType::typeAliasType(){
+	return val_type->typeAliasType();
+}
+
 string AliasType::encoding(){
 	return val_type->encoding();
 }
@@ -659,6 +679,11 @@ Val *AliasType::find( string id ){
 
 //***************** Reference Type ****************
 RefType *RefType::refType(){
+	return this;
+}
+
+//***************** Type Alias Type ****************
+TypeAliasType *TypeAliasType::typeAliasType(){
 	return this;
 }
 

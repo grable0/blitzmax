@@ -389,7 +389,12 @@ Type *Parser::parseBaseType(){
 		case T_DOUBLE:next();return Type::float64;
 		case T_OBJECT:next();return Type::objectObject;
 		case T_STRING:next();return Type::stringObject;
-		case T_IDENT:return new ObjectType( parseClassName(),scope );
+		case T_IDENT: {
+				string id=parseClassName();
+				TypeAliasType* alias=Type::findTypeAlias(id);
+				if( alias ) return alias;
+				return new ObjectType( id,scope );
+			}
 		}
 		exp(T_IDENT);
 	case '^':
@@ -986,6 +991,14 @@ void Parser::parseConstDecls(){
 	}while( cparse(',') );
 	
 	addMetaData( decls );
+}
+
+void Parser::parseAliasDecls(){
+	do{
+		string id=parseIdent();
+		Type *ty=parseType();
+		if( !Type::insertTypeAlias( id,ty ) ) fail( "Alias already defined" );
+	}while( cparse(',') );
 }
 
 void Parser::parseTypeDecl(){
@@ -1836,6 +1849,8 @@ void Parser::parse(){
 			opt_framework=framework;
 		}else if( cparse( T_IMPORT ) ){
 			parseImport();
+		}else if( cparse( T_ALIAS ) ){
+			parseAliasDecls();
 		}else{
 			break;
 		}
