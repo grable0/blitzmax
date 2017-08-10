@@ -2,6 +2,12 @@
 #include "std.h"
 #include "block.h"
 
+// for debuging only
+void OutputDebugString( string s ) { OutputDebugStringA( s.c_str() ); }
+void OutputDebugString( string* s ) { OutputDebugStringA( s->c_str() ); }
+void OutputDebugString( const char* s ) { OutputDebugStringA( s ); }
+void OutputDebugString( const wchar_t* s ) { OutputDebugStringW( s ); }
+
 int strictMode;
 FunBlock *mainFun;				//main function
 

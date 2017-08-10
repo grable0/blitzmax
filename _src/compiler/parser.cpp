@@ -264,6 +264,10 @@ CGExp *Parser::parseCGExp(){
 Decl *Parser::parseImportDecl(){
 	string id=parseIdent();
 	Type  *ty=parseType();
+	if( TypeAliasType* alias=ty->typeAliasType() ){
+		if( alias->ident.size()==0 ) alias->ident=id;
+		//ty=alias->val_type;
+	}
 	CGExp *cg=cparse(T_EQ) ? parseCGExp() : 0;
 	return new Decl( id,ty,cg );
 }
@@ -391,10 +395,18 @@ Type *Parser::parseBaseType(){
 		case T_STRING:next();return Type::stringObject;
 		case T_IDENT: {
 				string id=parseClassName();
-				TypeAliasType* alias=Type::findTypeAlias(id);
-				if( alias ) return alias;
+				TypeAliasType* alias=Type::findTypeAlias(id);			
+				if( alias ) return alias->val_type;
 				return new ObjectType( id,scope );
 			}
+		case ':':
+			if( import_nest ){
+				next();
+				OutputDebugString( "parsed alias type" );
+				Type* ty=parseBaseType();
+				return new TypeAliasType( 0,ty );
+			}
+			break;
 		}
 		exp(T_IDENT);
 	case '^':
@@ -514,7 +526,7 @@ Type *Parser::parseType(){
 		}
 	}else{
 		ty=parseBaseType();
-	}
+	}	
 	
 	for(;;){
 		if( curr()=='(' ){
@@ -994,11 +1006,20 @@ void Parser::parseConstDecls(){
 }
 
 void Parser::parseAliasDecls(){
+	vector<Decl*> decls;
+	
 	do{
 		string id=parseIdent();
 		Type *ty=parseType();
-		if( !Type::insertTypeAlias( id,ty ) ) fail( "Alias already defined" );
+		if( TypeAliasType* alias=Type::insertTypeAlias( id,ty ) ) {
+			Decl* d=new AliasDecl( id,alias,block );
+			decls.push_back( d );
+			decl( d );
+		} else 
+			fail( "Alias already defined" );
 	}while( cparse(',') );
+	
+	addMetaData( decls );
 }
 
 void Parser::parseTypeDecl(){

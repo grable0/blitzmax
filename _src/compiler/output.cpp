@@ -121,6 +121,10 @@ ostream &out::operator<<( ostream &out,Type *ty ){
 		if( t->attrs & ClassType::ABSTRACT ) out<<'A';
 		if( t->attrs & ClassType::FINAL ) out<<'F';
 		if( t->attrs & ClassType::EXTERN ) out<<'E';
+	}else if( TypeAliasType *t=ty->typeAliasType() ){
+		OutputDebugString( "emiting alias type" );
+		out<<"^^";
+		out<<t->val_type;
 	}else{
 		fail( "Export Type '%s' failed",ty->toString().c_str() );
 	}

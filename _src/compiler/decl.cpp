@@ -7,6 +7,7 @@
 
 static vector<ConstDecl*> _constDecls;
 static vector<FunDecl*> _funDecls;
+static vector<AliasDecl*> _aliasDecls;
 
 //********************* Decl **********************
 Decl::Decl( string id,Val *v ):ident(id),val(v){
@@ -35,6 +36,8 @@ void Decl::resolveDecls(){
 	for( k=0;k<_constDecls.size();++k ) _constDecls[k]->resolve();
 	if( opt_verbose ) cout<<"Resolving fun decls..."<<endl;
 	for( k=0;k<_funDecls.size();++k ) _funDecls[k]->resolve();
+	if( opt_verbose ) cout<<"Resolving alias decls..."<<endl;
+	for( k=0;k<_aliasDecls.size();++k ) _aliasDecls[k]->resolve();
 }
 
 void Decl::debugDecl( CGDat *d,int blockKind ){
@@ -187,4 +190,18 @@ void ConstDecl::resolve(){
 	Val *v=exp->eval(scope,val->type);
 	if( !v->constant() ) fail( "Constant initializers must be constant" );
 	val->cg_exp=v->cg_exp;
+}
+
+//****************** AliasDecl *********************
+AliasDecl::AliasDecl( string id,Type *ty,Scope *sc ):Decl(id,ty,0),scope(sc){
+	sourceinfo=source_info;
+	_aliasDecls.push_back(this);
+}
+
+void AliasDecl::resolve(){
+	if( typealias ) return;
+	source_info=sourceinfo;
+	Val* v=scope->findTypeIdent( ident );
+	if( !v || !v->type ) badid( ident );
+	typealias=v->type;
 }

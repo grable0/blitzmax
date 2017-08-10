@@ -44,4 +44,14 @@ struct ConstDecl : public Decl{
 	void resolve();
 };
 
+struct AliasDecl : public Decl{
+	string sourceinfo;
+	Scope *scope;
+	Type* typealias;
+	
+	AliasDecl( string id,Type *ty,Scope *sc );
+	
+	void resolve();
+};
+
 #endif

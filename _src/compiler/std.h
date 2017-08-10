@@ -6,6 +6,13 @@
 #include "declseq.h"
 #include "../codegen/codegen.h"
 
+// for debuging only
+void OutputDebugString( string s );
+void OutputDebugString( string* s );
+void OutputDebugString( const char* s );
+void OutputDebugString( const wchar_t* s );
+
+
 struct Decl;
 struct FunBlock;
 struct ClassBlock;
